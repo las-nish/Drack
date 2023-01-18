@@ -1,0 +1,35 @@
+{
+  "name": "drack-cloud",
+  "version": "1.0.0",
+  "description": "A Document Rack",
+  "main": "Source/drack.js",
+
+  "scripts": {
+    "start": "",
+    "test": ""
+  },
+
+  "dependencies": {
+    "express": "^4.18.2",
+		"mongoose": "^6.8.3",
+		"socket.io": "^4.5.4",
+    "body-parser": "^1.20.1",
+		"cookie-parser": "^1.4.6",
+    "ejs": "^3.1.8",
+		"uuid": "^9.0.0"
+	},
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/las-nish/Drack.git"
+  },
+
+  "author": "Lasan Nishshanka",
+  "license": "MIT",
+
+  "bugs": {
+    "url": "https://github.com/las-nish/Drack/issues"
+  },
+
+  "homepage": "https://github.com/las-nish/Drack#readme"
+}
