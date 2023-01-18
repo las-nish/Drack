@@ -5,7 +5,7 @@
   "main": "Source/drack.js",
 
   "scripts": {
-    "start": "",
+    "start": "node Source/drack.js",
     "test": ""
   },
 
@@ -16,7 +16,8 @@
     "body-parser": "^1.20.1",
 		"cookie-parser": "^1.4.6",
     "ejs": "^3.1.8",
-		"uuid": "^9.0.0"
+		"uuid": "^9.0.0",
+		"markdown-it": "^13.0.1"
 	},
 
   "repository": {
