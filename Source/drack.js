@@ -130,15 +130,17 @@ server_app.post('/api/create', function (request, response) {
 		}
 
 		if (is_create_success == false) {
-			response.status(status_failed).send({ message: 'Unable to create document' });
+//			response.status(status_failed).send({ message: 'Unable to create document' });
+			response.redirect('/error');
 			return;
 		} else {
-			response.status(status_created).send({
-				message: 'Create success',
-				document_id: get_document_id,
-				document_title: request.body.document_title,
-			});
+//			response.status(status_created).send({
+//				message: 'Create success',
+//				document_id: get_document_id,
+//				document_title: request.body.document_title,
+//			});
 
+			response.redirect('/read?document=' + get_document_id);
 			return;
 		}
 	});
@@ -160,7 +162,7 @@ server_app.post('/api/edit', function (request, response) {
 					document_tag: request.body.document_tag
 				};
 
-				const check_result = schema_document.updateOne({document_id: request.body.document_id}, {$set: new_data}, {});
+				const check_result = schema_document.updateOne({document_id: request.body.document_id}, {$set: new_data}, (error) => {});
 
 				if (check_result) {
 					is_update_success = true;
@@ -235,10 +237,14 @@ server_app.get('/read', (request, response) => {
 	schema_document.findOne({document_id: request.query.document}, (error, is_found) => {
 		if (!error) {
 			if (is_found) {
+				let markdown_parser = new markdown_js();
+				const document_content = markdown_parser.render(is_found.document_content);
+
 				response.render('_read', {
+					get_document_id: request.query.document,
 					get_document_title: is_found.document_title,
 					get_document_description: is_found.document_description,
-					get_document_content: is_found.document_content,
+					get_document_content: document_content,
 					get_document_status: is_found.document_status,
 					get_document_tag: is_found.document_tag
 				});
