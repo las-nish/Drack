@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title><%- get_document_title %></title>
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/gaweshani_theme.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light nav-light mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/">DRACK Cloud</a>
+
+        <ul class="navbar-nav ml-auto">
+            <a class="nav-link" href="/edit?document=<%- get_document_id %>" aria-haspopup="true" aria-expanded="false"><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;Edit Now</a>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <p><small>Document ID: <b><%- get_document_id %></b></small></p>
+    <div class="hr-trans"></div>
+
+    <div class="jumbotron jumbotron-fluid bg-light text-dark text-center" style="height:50%; background-size: cover !important; background-image: url('img/samples/dg2.jpg');">
+        <div class="container">
+            <div class="hr-trans text-upper"><small class="font-bold"><span class="badge badge-dark" style="padding: 8px;"><%- get_document_tag %></span></small></div>
+            <div class="hr-trans"></div>
+            <h1 class="display-4 font-thin"><%- get_document_title %></h1>
+            <div class="hr-trans"></div>
+            <p class="lead font-u-thin"><%- get_document_description %></p>
+        </div>
+    </div>
+
+    <div class="hr-trans"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="markdown-body"><%- get_document_content %></div>
+        </div>
+    </div>
+
+    <div class="hr-large-empty"></div>
+</div>
+
+<div class="card text-center font-normal text-light bg-dark" style="padding-top: 16px; padding-bottom: 16px;  border: none;">
+    <small><b>Drack Cloud - &copy; 2023 Lasan Nishshanka</b></small>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>

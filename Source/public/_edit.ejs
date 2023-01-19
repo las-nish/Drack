@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Edit Document</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/gaweshani_theme.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+</head>
+<body>
+
+<form id="document-form" method="post" enctype="application/x-www-form-urlencoded" action="/api/edit">
+    <nav class="navbar navbar-expand-lg navbar-light nav-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">DRACK Cloud</a>
+
+            <ul class="navbar-nav ml-auto">
+                <a class="nav-link" href="#" onclick="document.forms['document-form'].submit();" type="submit" aria-haspopup="true" aria-expanded="false"><i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;&nbsp;Update Document</a>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <blockquote class="text-center blockquote-secondary text-left">
+            <p class="text-left font-bold">Note&nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" href="#help-modal" style="padding: 0px; color: #0063ee;"><i class="fa fa-question-circle-o" style="color: #0063ee;"></i></a></p>
+            <footer class="blockquote-footer text-left font-regular">After the document is updated, you will automatically be redirected to the reading page</footer>
+            <footer class="blockquote-footer text-left font-regular">The document content editor on this page supports collaborative editing</footer>
+            <footer class="blockquote-footer text-left font-regular">To use that feature, share the link on this page with other editors</footer>
+        </blockquote>
+
+        <div class="row">
+            <div class="col-sm">
+                <br>
+                <h1 class="font-u-thin text-left">Edit <b>Document</b></h1>
+                <br>
+                <p><small>Document ID: <b><%- get_document_id %></b></small></p>
+                <hr class="hr-trans">
+
+                <div class="card">
+                    <div class="card-header">Main Details</div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Document Name</label>
+                            <input name="document_title" type="text" class="form-control" value="<%- get_document_title %>" maxlength="64"  required>
+                        </div>
+                        <div class="form-group">
+                            <label>Document Description</label>
+                            <input name="document_description" type="text" class="form-control" value="<%- get_document_description %>" maxlength="128" required>
+                        </div>
+
+                        <div class="form-group" style="display: none;">
+                            <label>Document Content</label>
+                            <input name="document_id" type="text" class="form-control" value="<%- get_document_id %>">
+                        </div>
+
+                        <div class="form-group" style="display: none;">
+                            <label>Select Tag</label>
+                            <select name="document_tag" class="custom-select">
+                                <option value="Article">Article</option>
+                                <option value="Tutorial">Tutorial</option>
+                                <option value="News">News</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Status</label>
+                            <select name="document_status" class="custom-select">
+                                <option value="Not Ready to Read">Not Ready to Read</option>
+                                <option value="Ready to Read">Ready to Read</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <br><br>
+
+                <div class="card">
+                    <div class="card-header">Document Content</div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <textarea name="document_content" id="document-markdown-content" type="text" class="form-control font-mono" rows="16"><%- get_document_content %></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md">
+                                <div id="document-markdown-preview" class="markdown-body"><i><small>Document Preview Panel</small></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="hr-trans"></div>
+
+<div class="card text-center font-normal text-light bg-dark" style="padding-top: 16px; padding-bottom: a6px;  border: none;">
+    <small><b>Drack Cloud - &copy; 2023 Lasan Nishshanka</b></small>
+</div>
+
+<div class="modal fade" id="help-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="help-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="help-modal-title">Help Guide</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li style="line-height: 32px;">A maximum of 64 characters can be used in the <b>Document Name</b></li>
+                    <li style="line-height: 32px;">A maximum of 128 characters can be used in the <b>Document Description</b></li>
+                    <li style="line-height: 32px;">The <b>Document Tag</b> cannot be changed after the document is saved</li>
+                    <li style="line-height: 32px;">All documents are stored <b>anonymously</b></li>
+                    <li style="line-height: 32px;">The document can be written in <b>Markdown</b> language</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button b-dark ripple" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let markdown_it = window.markdownit();
+
+    let markdown_editor = document.getElementById("document-markdown-content");
+    let markdown_viewer = document.getElementById("document-markdown-preview");
+
+    markdown_editor.addEventListener("input", function() {
+        markdown_viewer.innerHTML = markdown_it.render(markdown_editor.value);
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>

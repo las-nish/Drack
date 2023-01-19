@@ -33,6 +33,7 @@ const ejs_js = require('ejs');
 const uuid_js = require('uuid');
 const markdown_js = require('markdown-it');
 const path_js = require('path');
+const file_js = require('fs');
 
 // Message
 // -------
@@ -130,15 +131,16 @@ server_app.post('/api/create', function (request, response) {
 		}
 
 		if (is_create_success == false) {
-//			response.status(status_failed).send({ message: 'Unable to create document' });
+			// response.status(status_failed).send({ message: 'Unable to create document' });
+
 			response.redirect('/error');
 			return;
 		} else {
-//			response.status(status_created).send({
-//				message: 'Create success',
-//				document_id: get_document_id,
-//				document_title: request.body.document_title,
-//			});
+			// response.status(status_created).send({
+			// 	message: 'Create success',
+			// 	document_id: get_document_id,
+			// 	document_title: request.body.document_title,
+			// });
 
 			response.redirect('/read?document=' + get_document_id);
 			return;
@@ -162,31 +164,36 @@ server_app.post('/api/edit', function (request, response) {
 					document_tag: request.body.document_tag
 				};
 
-				const check_result = schema_document.updateOne({document_id: request.body.document_id}, {$set: new_data}, (error) => {});
+				schema_document.updateOne({document_id: request.body.document_id}, {$set: new_data}, (error) => {
+					if (!error) {
+						is_update_success = true;
+					}
 
-				if (check_result) {
-					is_update_success = true;
-				}
+					if (is_update_success == false) {
+						// response.status(status_failed).send({ message: 'Unable to update document' });
+
+						response.redirect('/error');
+						return;
+					} else {
+						// response.status(status_created).send({
+						// 	message: 'Update success',
+						// 	document_id: request.body.document_id,
+						// 	document_title: request.body.document_title,
+						// });
+
+						response.redirect('/read?document=' + request.body.document_id);
+						return;
+					}
+				});
 			}
-		}
-
-		if (is_update_success == false) {
-			response.status(status_failed).send({ message: 'Unable to update document' });
-			return;
-		} else {
-			response.status(status_success).send({
-				message: 'Update success',
-				document_id: request.body.document_id,
-				document_title: request.body.document_title
-			});
-
-			return;
 		}
 	});
 });
 
 // View Engine Setup
 // -----------------
+
+server_app.use(express_js.static(path_js.join(__dirname, 'public')));
 
 server_app.set('view engine', 'ejs');
 server_app.set('views', path_js.join(__dirname, 'public'));
