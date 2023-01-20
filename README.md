@@ -3,7 +3,7 @@
     <p>Write, share, and edit <b>documents</p> anonymously</p>
 </div>
 
-![sdsd](.readme/device-screen.png)
+![sdsd](.readme/device-screen-dell.png)
 
 <hr>
 
