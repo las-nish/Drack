@@ -2,8 +2,8 @@
 //
 // Developed by Lasan Nishshanka
 //
-// Copyright (c) 2022 Lasan Nishshanka
-// All Rights Reserved
+// License  : GNU General Public License
+// Warranty : No Warranty
 
 // Global Variable
 // ---------------
