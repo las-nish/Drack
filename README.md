@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
     <h1>Drack Cloud</h1>
     <p>Write, share, and edit <b>documents</p> anonymously</p>
 </div>
