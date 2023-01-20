@@ -12,7 +12,6 @@
 
 const server_web_url = "127.0.0.1";
 const server_web_port = 3000;
-const server_socket_port = 3001;
 const server_database_name = "drack_db";
 
 // Response Variable
@@ -26,14 +25,18 @@ const status_failed = 400;  // Status when Error
 
 const express_js = require('express');
 const mongoose_js = require('mongoose');
-const socket_js = require('socket.io')(server_socket_port);
 const parser_js = require('body-parser');
 const cookie_js = require('cookie-parser');
 const ejs_js = require('ejs');
 const uuid_js = require('uuid');
 const markdown_js = require('markdown-it');
+// const socket_js = require('socket.io');
+const sock_js = require('sockjs');
+const http_js = require('http');
+const cors_js = require('cors');
 const path_js = require('path');
 const file_js = require('fs');
+const connect_js = require('connect');
 
 // Message
 // -------
@@ -48,20 +51,6 @@ function message_error(error_content) {
 
 	process.exit(1);
 }
-
-// Server Connection
-// -----------------
-
-const server_app = express_js();
-
-// Socket Connection
-// -----------------
-
-socket_js.on('connection', function(socket) {
-	socket.on('update', function(text) {
-		socket.broadcast.emit('update', text);
-	});
-});
 
 // Connect Database
 // ----------------
@@ -96,11 +85,70 @@ const model_document = new mongoose_js.Schema({
 
 const schema_document = mongoose_js.model('schema_document', model_document);
 
-// Routing Structure
+// Server Connection
 // -----------------
 
+const server_app = express_js();
+const server_http = http_js.createServer(server_app);
+// const socket_io = socket_js(server_http);
+
+server_app.use(cors_js());
 server_app.use(parser_js.json());
 server_app.use(cookie_js());
+
+// Socket Connection
+// -----------------
+
+// socket_io.on('connection', (socket) => {
+// 	console.log('user connected');
+// 	socket.on('disconnect', function () {
+// 		console.log('user disconnected');
+// 	});
+// })
+
+const sockjs_opts = {
+	prefix: '/drack_socket'
+};
+
+const sockjs_drack = sock_js.createServer(sockjs_opts);
+
+// sockjs_drack.on('connection', function (conn) {
+// 	conn.on('data', function (message) {
+// 		conn.write(message);
+// 	});
+// });
+
+// sockjs_drack.on('connection', (conn) => {
+// 	conn.on('data', (message) => {
+// 		sockjs_drack.clients.forEach((client) => {
+// 			client.write(message);
+// 		});
+// 	});
+// });
+
+const connections = [];
+
+sockjs_drack.on('connection', (conn) => {
+	connections.push(conn);
+
+	conn.on('data', (message) => {
+		connections.forEach(client => {
+			client.write(message);
+		});
+	});
+});
+
+sockjs_drack.installHandlers(server_http, { prefix:'/drack_socket' });
+
+// Listen to the Web Server
+// ------------------------
+
+server_http.listen(server_web_port, () => {
+	message_note("Server is listening on port " + server_web_port);
+});
+
+// Routing Structure
+// -----------------
 
 server_app.use(parser_js.urlencoded({
 	extended: true
@@ -227,7 +275,9 @@ server_app.get('/edit', (request, response) => {
 					get_document_description: is_found.document_description,
 					get_document_content: is_found.document_content,
 					get_document_status: is_found.document_status,
-					get_document_tag: is_found.document_tag
+					get_document_tag: is_found.document_tag,
+					get_server_address: server_web_url,
+					get_server_port: server_web_port
 				});
 			} else {
 				response.render('_error');
@@ -270,10 +320,3 @@ server_app.all('*', (request, response) => {
 
 // Unit Test
 // ---------
-
-// Listen to the Web Server
-// ------------------------
-
-server_app.listen(server_web_port, () => {
-	message_note("Server is listening on port " + server_web_port);
-});

@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/gaweshani_theme.css">
 
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<!--    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>-->
+    <script src="http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"></script>
 </head>
 <body>
 
@@ -61,12 +63,7 @@
 
                         <div class="form-group" style="display: none;">
                             <label>Select Tag</label>
-                            <select name="document_tag" class="custom-select">
-                                <option value="Article">Article</option>
-                                <option value="Tutorial">Tutorial</option>
-                                <option value="News">News</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <input name="document_tag" type="text" class="form-control" value="<%- get_document_tag %>">
                         </div>
 
                         <div class="form-group">
@@ -135,13 +132,46 @@
 </div>
 
 <script>
+    // Live Markdown Preview
+
     let markdown_it = window.markdownit();
 
     let markdown_editor = document.getElementById("document-markdown-content");
     let markdown_viewer = document.getElementById("document-markdown-preview");
 
-    markdown_editor.addEventListener("input", function() {
-        markdown_viewer.innerHTML = markdown_it.render(markdown_editor.value);
+    // markdown_editor.addEventListener("input", function() {
+    //     markdown_viewer.innerHTML = markdown_it.render(markdown_editor.value);
+    // });
+
+    // Socket IO
+
+    let server_url = "http://" + "<%- get_server_address %>" + ":" + "<%- get_server_port %>";
+
+//    let socket = io.connect(server_url);
+
+//    socket.on('connect', function() {
+//        console.log('connected');
+//    });
+
+//    socket.on('disconnect', function(){
+//        console.log('disconnected');
+//    });
+
+    let sockjs_url = '/drack_socket';
+    let sock_js_connection = new SockJS(sockjs_url);
+
+    sock_js_connection.onopen = () => {
+        console.log("Sock JS connection established");
+    };
+
+    sock_js_connection.onmessage = (event) => {
+        markdown_editor.value = event.data;
+        markdown_viewer.innerHTML = markdown_it.render(event.data);
+    };
+
+    markdown_editor.addEventListener('input', (event) => {
+        sock_js_connection.send(event.target.value);
+        // console.log(event.target.value);
     });
 </script>
 
