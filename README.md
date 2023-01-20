@@ -17,6 +17,15 @@
 
 DRACK is a platform for anonymous document writing, sharing, and editing using the power of markdown, because it allows for simple and beautiful documents.
 
+**The following features are available**
+
+- Markdown Based Editor
+- Markdown Live Preview
+- Anonymous Document Publish
+- Anonymous Collaborative Editing
+- Document Tags
+- Document Status
+
 # Install
 
 ## Install Required Tools
