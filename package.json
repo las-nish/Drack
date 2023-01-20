@@ -5,7 +5,7 @@
   "main": "Source/drack.js",
   "scripts": {
     "start": "node Source/drack.js",
-    "test": "",
+    "test": "node -e 'require(\"./Source/drack.js\").unit_test()'",
     "proxy": "http://localhost:3000"
   },
   "dependencies": {

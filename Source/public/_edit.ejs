@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex,nofollow">
 
     <title>Edit Document</title>
 
@@ -165,13 +166,31 @@
     };
 
     sock_js_connection.onmessage = (event) => {
-        markdown_editor.value = event.data;
-        markdown_viewer.innerHTML = markdown_it.render(event.data);
+        let get_data = JSON.parse(event.data);
+
+        if (get_data.document_id == '<%- get_document_id %>') {
+            markdown_editor.value = get_data.document_content;
+            markdown_viewer.innerHTML = markdown_it.render(get_data.document_content);
+        }
     };
 
+//    markdown_editor.addEventListener('input', (event) => {
+//        sock_js_connection.send(event.target.value);
+//        // console.log(event.target.value);
+//    });
+
     markdown_editor.addEventListener('input', (event) => {
-        sock_js_connection.send(event.target.value);
-        // console.log(event.target.value);
+        let get_content = event.target.value;
+
+        sock_js_connection.send(JSON.stringify({
+            document_id: '<%- get_document_id %>',
+            document_content: get_content
+        }));
+
+        console.log('<%- get_document_id %>');
+
+//        sock_js_connection.send(get_content);
+        // console.log(get_content);
     });
 </script>
 

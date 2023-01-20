@@ -128,14 +128,70 @@ const sockjs_drack = sock_js.createServer(sockjs_opts);
 
 const connections = [];
 
+// sockjs_drack.on('connection', (conn) => {
+// 	connections.push(conn);
+//
+// 	conn.on('data', (message) => {
+// 		connections.forEach(client => {
+// 			client.write(message);
+// 		});
+// 	});
+// });
+
+// let socket_client_count = 0;
+// let socket_maximum_client = 2;
+
 sockjs_drack.on('connection', (conn) => {
 	connections.push(conn);
 
+	// if (socket_client_count >= socket_maximum_client) {
+	// 	message_note("Maximum clients reached");
+	// 	conn.close();
+	// }
+	//
+	// socket_client_count = socket_client_count + 1;
+
 	conn.on('data', (message) => {
-		connections.forEach(client => {
-			client.write(message);
+		const data = JSON.parse(message);
+
+		schema_document.findOne({document_id: data.document_id}, (error, document) => {
+			if (error) {
+				message_note(error);
+				return;
+			}
+
+			// console.log("Get from  : " + data.document_id);
+			// console.log("Update To : " + document.document_id);
+
+			document.document_content = data.document_content;
+
+			document.save((error, updated_document) => {
+				if (error) {
+					message_note((error));
+					return;
+				} else {
+					const get_message = JSON.stringify({
+						document_id: data.document_id,
+						document_content: updated_document.document_content
+					});
+
+					connections.forEach(client => {
+						client.write(get_message);
+					});
+				}
+			});
 		});
+
+		// connections.forEach(client => {
+		// 	client.write(message);
+		// });
 	});
+
+	// conn.on('close', () => {
+	// 	socket_client_count = socket_client_count - 1;
+	// 	message_note("A client has disconnected");
+	// 	message_note(("Number of current clients is " + socket_client_count));
+	// });
 });
 
 sockjs_drack.installHandlers(server_http, { prefix:'/drack_socket' });
@@ -320,3 +376,9 @@ server_app.all('*', (request, response) => {
 
 // Unit Test
 // ---------
+
+module.exports.unit_test = function() {
+	message_note("Unit Test");
+
+	process.exit();
+}
